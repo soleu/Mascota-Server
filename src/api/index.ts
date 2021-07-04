@@ -39,6 +39,10 @@ router.post("/user",async(req,res)=>{
         console.log("User: ",user1);
         console.log("Univ: ",school1);
 
+        await sopt1.save();
+        await user1.save();
+        await school1.save();
+
         res.json({
             "status":200,
             "message":"연결성공",
