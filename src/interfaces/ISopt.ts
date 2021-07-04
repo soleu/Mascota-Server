@@ -9,7 +9,7 @@ export interface ISopt extends Document{
 }
 
 export interface ISoptDocument extends ISopt{
-    setUser : (user : IUser) => Promise<void>
+    setUser : (user : mongoose.Types._ObjectId) => Promise<void>
     // getTransferType : () => Promise<IUser>
 }
 

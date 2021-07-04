@@ -16,10 +16,34 @@ require("../models/Sopt")
 const router = express.Router()
 
 router.post("/user",async(req,res)=>{
-    const {text}=req.body;
+    
     try{
-        //const sopt1=await new Sopt().setUser()
-        //const user1=await new User()
+        
+        const user1=new User();
+        const school1=new School();
+        const sopt1=new  Sopt();
+        
+        //console.log("text",text);
+        sopt1.part=req.body.part;
+        sopt1.grade=req.body.grade;
+        await sopt1.setUser(user1._id);
+
+        await school1.setName(req.body.schoolName);
+        await school1.setUser(user1._id);
+
+        user1.name=req.body.userName;
+        await user1.setSchool(school1);
+        await user1.setSopt(sopt1);
+
+        console.log("Sopt: ",sopt1);
+        console.log("User: ",user1);
+        console.log("Univ: ",school1);
+
+        res.json({
+            "status":200,
+            "message":"연결성공",
+            "data": sopt1,user1,school1
+        })
 
     }catch(error){
         console.error(error.message);
@@ -29,8 +53,8 @@ router.post("/user",async(req,res)=>{
 
 router.get("/user/:id",async(req,res)=>{
     try{
-        const user= await User.findById(req.params.id).populate('sopt','_id part');
-       const soptMember=user.sopt;
+        const user= await User.findById(req.params.id).populate('sopt','_id part');//한번에 가능
+        const soptMember=user.sopt;
         console.log(user);
 
         res.json({
@@ -50,15 +74,12 @@ router.get("/user/:id",async(req,res)=>{
 
 router.get("/userDetail/:id",async(req,res)=>{
 try{
-    //어캐 자름?_?
-    const userInfo=await User.findById(req.params.id);
-    const userS=await User.findById(req.params.id).populate('sopt');
+    const userS=await User.findById(req.params.id).populate('sopt').populate('school');
+    
     const userSopt=await new Sopt(userS.sopt);
-
-    const userU=await User.findById(req.params.id).populate('school');
-    const userUniv=await new School(userU.school);
-
-    const userData=await new GetSoptUnivInfoDto(userInfo,userSopt,userUniv);
+    const userUniv=await new School(userS.school);
+    
+    const userData=await new GetSoptUnivInfoDto(userS,userSopt,userUniv);
     console.log("userData : ",userData);
 
     res.json({

@@ -11,7 +11,7 @@ export interface IUser extends Document{
 
 export interface IUserDocument extends IUser{
     setSchool : (school : ISchool) => Promise<void>
-    setSopt : (sopt : mongoose.Types.ObjectId) => Promise<void>
+    setSopt : (sopt : ISopt) => Promise<void>
 }
 
 export interface IUserModel extends Model<IUserDocument>{
